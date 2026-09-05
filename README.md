@@ -13,5 +13,5 @@ pipenv install pygame
 ```bash
 # execute download.js antes de pokebingo.py para ter os sprites
 node download.js
-python pokebingo.py
+pipenv run python pokebingo.py
 ```
