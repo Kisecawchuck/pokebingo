@@ -1,11 +1,12 @@
 # Programa para o PokéBingo
 # trate variáveis em CAIXA_ALTA como constantes
 
-import pygame
 import sys
+from math import ceil, floor
+import pygame
+from pygame.locals import *
 from glob import glob
 from random import randrange
-from pygame.locals import *
 
 img_dir = input("Diretório das imagens: ")
 pokemon = glob(f"{img_dir}/*.png")
@@ -29,13 +30,14 @@ X_STEP = 64
 Y_STEP = 64
 
 # carrega os pokemon no pygame
-for i in range(len(pokemon)):
+N = len(pokemon)
+for i in range(N):
     pokemon[i] = pygame.image.load(pokemon[i])
 
-bigpokemon = pokemon[75:150]
+bigpokemon = pokemon[ceil(N / 2) : N]
 print(len(bigpokemon))
 
-pokemon = pokemon[0:75]
+pokemon = pokemon[0: floor(N / 2)]
 print(len(pokemon))
 
 pygame.display.flip()
@@ -57,8 +59,9 @@ while pokemon and bigpokemon:
                 SCREEN.fill(WHITE, [X0 / 2, 1.5 * Y0, BIG_IMAGE_SIZE[0], BIG_IMAGE_SIZE[1]])
 
                 # sorteamos um pokemon para cada imagem
-                pkmn_sorteado = pokemon[randrange(len(pokemon))]
-                bigpkmn_sorteado = bigpokemon[randrange(len(bigpokemon))]
+                idx = randrange(len(pokemon))
+                pkmn_sorteado = pokemon[idx]
+                bigpkmn_sorteado = bigpokemon[idx]
 
                 # desenhamos o ícone acima
                 prox = pygame.transform.scale(pkmn_sorteado, IMAGE_SIZE)
