@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in {0..10}; do
+    pipenv run python pokebingo.py -p sprites/icons
+done

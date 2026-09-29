@@ -2,6 +2,8 @@
 # trate variáveis em CAIXA_ALTA como constantes
 
 import sys
+import os
+import time
 import getopt
 import pygame
 from pygame.locals import *
@@ -10,11 +12,6 @@ from glob import glob
 from random import randrange, shuffle
 
 
-img_dir = input("Diretório das imagens: ")
-pokemon = glob(f"{img_dir}/*.png")
-
-pygame.init()
-
 WIDTH = 1280
 HEIGHT = 720
 WHITE = (255, 255, 255)
@@ -22,8 +19,12 @@ SMALL_IMAGE_SIZE = (64, 64)
 IMAGE_SIZE = (128, 128)
 BIG_IMAGE_SIZE = (256, 256)
 
+pygame.init()
+
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 SCREEN.fill(WHITE)
+
+pygame.display.flip()
 
 X0 = 580
 Y0 = 120
@@ -31,24 +32,10 @@ Y_OFFSET = 10
 X_STEP = 64
 Y_STEP = 64
 
-# carrega os pokemon no pygame
-N = len(pokemon)
-for i in range(N):
-    pokemon[i] = pygame.image.load(pokemon[i])
-
-shuffle(pokemon)
-bigpokemon = pokemon[ceil(N / 2) : N]
-print(len(bigpokemon))
-
-pokemon = pokemon[0: floor(N / 2)]
-print(len(pokemon))
-
-pygame.display.flip()
-
 ROWS = 5
 COLS = 5
 
-def sorteio(cnt):
+def sorteio(pokemon, bigpokemon, cnt):
     # limpamos o sorteio anterior
     SCREEN.fill(WHITE, [X0 + 3 * SMALL_IMAGE_SIZE[0] / 2, 0, IMAGE_SIZE[0], IMAGE_SIZE[1]])
     SCREEN.fill(WHITE, [X0 / 2, 1.5 * Y0, BIG_IMAGE_SIZE[0], BIG_IMAGE_SIZE[1]])
@@ -80,15 +67,32 @@ def sorteio(cnt):
 def main():
     # Flags de linha de comando
     try: 
-        opts, args = getopt.getopt(sys.argv[1:], "i", ["interactive"])
+        opts, args = getopt.getopt(sys.argv[1:], "ip:", ["interactive", "path="])
     except getopt.GetoptError as err:
         print(err)
         sys.exit(1)
 
     interactive = False
+    img_dir = None
     for opt, arg in opts:
         if opt in ("-i", "--interactive"):
             interactive = True
+        if opt in ("-p", "--path"):
+            img_dir = arg
+
+    pokemon = glob(f"{img_dir}/*.png")
+
+    # carrega os pokemon no pygame
+    N = len(pokemon)
+    for i in range(N):
+        pokemon[i] = pygame.image.load(pokemon[i])
+
+    shuffle(pokemon)
+    bigpokemon = pokemon[ceil(N / 2) : N]
+    print(len(bigpokemon))
+
+    pokemon = pokemon[0: floor(N / 2)]
+    print(len(pokemon))
 
     cnt = 0
     while pokemon and bigpokemon and cnt < ROWS*COLS:
@@ -100,11 +104,15 @@ def main():
                         pygame.quit()
                         sys.exit()
                     if event.key == K_UP:
-                        sorteio(cnt)
+                        sorteio(pokemon, bigpokemon, cnt)
                         cnt += 1
         else:
-            sorteio(cnt)
+            sorteio(pokemon, bigpokemon, cnt)
             cnt += 1
+
+    os.makedirs("./cartelas", exist_ok = True)
+
+    pygame.image.save(SCREEN, f"./cartelas/cartela-{int(time.time())}.png")
     print("Acabaram os pokemon")
 
 if __name__ == "__main__":
