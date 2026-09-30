@@ -18,19 +18,19 @@ SMALL_IMAGE_SIZE = (64, 64)
 IMAGE_SIZE = (128, 128)
 BIG_IMAGE_SIZE = (256, 256)
 
+X0 = 580
+Y0 = 120
+Y_OFFSET = 10
+X_STEP = SMALL_IMAGE_SIZE[0]
+Y_STEP = SMALL_IMAGE_SIZE[1]
+
+ROWS = 5
+COLS = 5
+
 pygame.init()
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 SCREEN.fill(WHITE)
 pygame.display.flip()
-
-X0 = 580
-Y0 = 120
-Y_OFFSET = 10
-X_STEP = 64
-Y_STEP = 64
-
-ROWS = 5
-COLS = 5
 
 def sorteio(pokemon, bigpokemon, cnt):
     # limpamos o sorteio anterior
@@ -77,7 +77,7 @@ def main():
         if opt in ("-p", "--path"):
             img_dir = arg
 
-    if interactive:
+    if not img_dir:
         img_dir = input("Diretório das imagens: ")
     pokemon = glob(f"{img_dir}/*.png")
 
