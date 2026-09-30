@@ -11,7 +11,6 @@ from math import ceil, floor
 from glob import glob
 from random import randrange, shuffle
 
-
 WIDTH = 1280
 HEIGHT = 720
 WHITE = (255, 255, 255)
@@ -20,10 +19,8 @@ IMAGE_SIZE = (128, 128)
 BIG_IMAGE_SIZE = (256, 256)
 
 pygame.init()
-
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 SCREEN.fill(WHITE)
-
 pygame.display.flip()
 
 X0 = 580
@@ -80,6 +77,8 @@ def main():
         if opt in ("-p", "--path"):
             img_dir = arg
 
+    if interactive:
+        img_dir = input("Diretório das imagens: ")
     pokemon = glob(f"{img_dir}/*.png")
 
     # carrega os pokemon no pygame
@@ -112,7 +111,9 @@ def main():
 
     os.makedirs("./cartelas", exist_ok = True)
 
-    pygame.image.save(SCREEN, f"./cartelas/cartela-{int(time.time())}.png")
+    filename = f"cartela-{int(time.time())}.png"
+    pygame.image.save(SCREEN, f"./cartelas/{filename}")
+    print(f"Imagem salva em cartelas/{filename}")
     print("Acabaram os pokemon")
 
 if __name__ == "__main__":
