@@ -4,7 +4,6 @@
 import sys
 import os
 import time
-import getopt
 import pygame
 from pygame.locals import *
 from math import ceil, floor
@@ -62,59 +61,31 @@ def sorteio(pokemon, bigpokemon, cnt):
 
 
 def main():
-    # Flags de linha de comando
-    try: 
-        opts, args = getopt.getopt(sys.argv[1:], "ip:", ["interactive", "path="])
-    except getopt.GetoptError as err:
-        print(err)
-        sys.exit(1)
-
-    interactive = False
-    img_dir = None
-    for opt, arg in opts:
-        if opt in ("-i", "--interactive"):
-            interactive = True
-        if opt in ("-p", "--path"):
-            img_dir = arg
-
-    if not img_dir:
-        img_dir = input("Diretório das imagens: ")
-    pokemon = glob(f"{img_dir}/*.png")
+    pokemon = glob("sprites/box/*.png")
+    bigpokemon = glob("sprites/icons/*.png")
+    pokemon.sort()
+    bigpokemon.sort()
 
     # carrega os pokemon no pygame
     N = len(pokemon)
     for i in range(N):
         pokemon[i] = pygame.image.load(pokemon[i])
+        bigpokemon[i] = pygame.image.load(bigpokemon[i])
 
-    shuffle(pokemon)
-    bigpokemon = pokemon[ceil(N / 2) : N]
     print(len(bigpokemon))
-
-    pokemon = pokemon[0: floor(N / 2)]
     print(len(pokemon))
 
     cnt = 0
-    while pokemon and bigpokemon and cnt < ROWS*COLS:
-        if interactive:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN:
-                    if event.key == K_q:
-                        pygame.display.quit()
-                        pygame.quit()
-                        sys.exit()
-                    if event.key == K_UP:
-                        sorteio(pokemon, bigpokemon, cnt)
-                        cnt += 1
-        else:
-            sorteio(pokemon, bigpokemon, cnt)
-            cnt += 1
-
-    os.makedirs("./cartelas", exist_ok = True)
-
-    filename = f"cartela-{int(time.time())}.png"
-    pygame.image.save(SCREEN, f"./cartelas/{filename}")
-    print(f"Imagem salva em cartelas/{filename}")
-    print("Acabaram os pokemon")
+    while pokemon and bigpokemon and cnt <= ROWS*COLS:
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_q:
+                    pygame.display.quit()
+                    pygame.quit()
+                    sys.exit()
+                if event.key == K_UP and cnt < ROWS*COLS:
+                    sorteio(pokemon, bigpokemon, cnt)
+                    cnt += 1
 
 if __name__ == "__main__":
     main()
