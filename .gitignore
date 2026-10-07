@@ -1,3 +1,4 @@
 sprites
 .venv
-cartelas/*
+Pipfile
+Pipfile.lock
