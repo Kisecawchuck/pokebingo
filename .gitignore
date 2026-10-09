@@ -2,3 +2,11 @@ sprites
 .venv
 Pipfile
 Pipfile.lock
+*.pdf
+cartela*.png
+all_cards.txt
+B/
+I/
+N/
+G/
+O/

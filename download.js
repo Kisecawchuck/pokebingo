@@ -5,18 +5,6 @@ const path = require('path');
 // const alolan = Array.prototype.slice.call(document.querySelectorAll(".infocard-list-pkmn-sm")[6].children)
 //        .map((img) => img.children[0].children[1].alt.toLowerCase())
 // em https://pokemondb.net/sprites
-const alolan_forms = [
-    "raichu-alolan",
-    "rattata-alolan", "raticate-alolan",
-    "marowak-alolan",
-    "sandshrew-alolan", "sandslash-alolan",
-    "vulpix-alolan", "ninetales-alolan",
-    "diglett-alolan", "dugtrio-alolan",
-    "meowth-alolan", "persian-alolan",
-    "geodude-alolan", "graveler-alolan", "golem-alolan",
-    "grimer-alolan", "muk-alolan",
-    "exeggutor-alolan",
-];
 
 const alolan_dex = [
     "rowlet", "dartrix", "decidueye",
@@ -44,7 +32,6 @@ const alolan_dex = [
     "sandygast", "palossand",
     "pyukumuku",
     "type-null", "silvally-normal",
-    "minior-meteor",
     "komala",
     "turtonator",
     "togedemaru",
@@ -68,36 +55,19 @@ const alolan_dex = [
     "necrozma",
     "magearna",
     "marshadow",
-    "poipole", "naganadel",
-    "stakataka",
-    "blacephalon",
-    "zeraora",
-    "meltan", "melmetal",
-];
-
-// formas alternativas dos pokemon de Alola
-alternatives = [
-    "oricorio-pau", "oricorio-pom-pom", "oricorio-sensu",
-    "lycanroc-dusk", "lycanroc-midnight",
-    "wishiwashi-school",
-    "silvally-bug", "silvally-dark", "silvally-dragon", "silvally-electric", "silvally-fairy", "silvally-fighting", "silvally-fire", "silvally-flying", "silvally-ghost", "silvally-grass", "silvally-ground", "silvally-ice", "silvally-poison", "silvally-psychic", "silvally-rock", "silvally-steel", "silvally-water",
-    "minior-blue", "minior-green", "minior-indigo", "minior-orange", "minior-red", "minior-violet", "minior-yellow",
-    "necrozma-dawn", "necrozma-dusk", "necrozma-ultra",
-    "magearna-original",
 ];
 
 // ícones do HOME
 const icons = alolan_dex.map((pokemon) => `https://img.pokemondb.net/sprites/home/normal/${pokemon}.png`)
-    .concat(alolan_forms.map((pokemon) => `https://img.pokemondb.net/sprites/home/normal/${pokemon}.png`));
 
 // ícones do global link
-alolan_dex.splice(alolan_dex.indexOf("meltan"), 1);
-alolan_dex.splice(alolan_dex.indexOf("melmetal"), 1);
 const vector = alolan_dex.map((pokemon) => `https://img.pokemondb.net/artwork/vector/${pokemon}.png`)
-    .concat(alolan_forms.map((pokemon) => `https://img.pokemondb.net/artwork/vector/${pokemon}.png`));
 
 shuffle = []
 for (let i = 722; i <= 802; i++) {
+    // skipa o minior, não gostamos do minior
+    if (i == 774) continue;
+
     shuffle.push(`https://www.pkparaiso.com/imagenes/shuffle/sprites/${i}.png`)
 }
 
@@ -124,28 +94,15 @@ async function main() {
     const icons_dir = "sprites/icons";
     fs.mkdirSync(icons_dir, { recursive: true });
     for (let i in icons) {
-        await baixarImagem(icons[i], i, icons_dir);
+        await baixarImagem(icons[i], String(i).padStart(3, '0'), icons_dir);
     }
-
-    /*
-    const box_dir = "sprites/box";
-    fs.mkdirSync(box_dir, { recursive: true });
-    for (let i in box) {
-        await baixarImagem(box[i], i, box_dir);
-    }
-
-    const alt_dir = "sprites/alt";
-    fs.mkdirSync(alt_dir, { recursive: true });
-    for (let i in alts) {
-        await baixarImagem(alts[i], i, alt_dir);
-    }
-    */
 
     const vector_dir = "sprites/vector";
     fs.mkdirSync(vector_dir, { recursive: true });
     for (let i in vector) {
-        await baixarImagem(vector[i], i, vector_dir);
+        await baixarImagem(vector[i], String(i).padStart(3, '0'), vector_dir);
     }
+
     const shuffle_dir = "sprites/shuffle";
     fs.mkdirSync(shuffle_dir, { recursive: true });
     for (let i in shuffle) {
